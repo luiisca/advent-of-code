@@ -5,7 +5,7 @@ const parseInput = (rawInput: string) => rawInput
 const part1 = (rawInput: string) => {
   const input = parseInput(rawInput).split(/\n/)
 
-  let caloriesArr: number[] = [0]
+  let totalCaloriesByElf: number[] = [0]
   let highestCalories: number = 0
   let elfPosition: number = 0
   input.reduce((prev, crr, i) => {
@@ -14,11 +14,11 @@ const part1 = (rawInput: string) => {
       return `${Number(prev) + Number(crr)}`
     }
 
-    caloriesArr.push(Number(prev))
+    totalCaloriesByElf.push(Number(prev))
 
     highestCalories =
-      caloriesArr[elfPosition] > highestCalories
-        ? caloriesArr[elfPosition]
+      totalCaloriesByElf[elfPosition] > highestCalories
+        ? totalCaloriesByElf[elfPosition]
         : highestCalories
 
     elfPosition++
@@ -32,44 +32,32 @@ const part1 = (rawInput: string) => {
 const part2 = (rawInput: string) => {
   const input = parseInput(rawInput).split(/\n/)
 
-  let caloriesArr: number[] = [0]
-  let highestCalories: number[] = [0]
+  let totalCaloriesByElf: number[] = [0]
+  let highestCalories: number[] = [0, 0, 0]
   let elfPosition: number = 0
-  input.reduce((prev, crr, i) => {
-    // sum up values
+
+  input.reduce((prev, crr) => {
     if (crr !== "") {
       return `${Number(prev) + Number(crr)}`
     }
 
-    caloriesArr.push(Number(prev))
+    totalCaloriesByElf.push(Number(prev))
 
-    // highestCalories.unshift(
-    //   caloriesArr[elfPosition] > highestCalories[0]
-    //     ? caloriesArr[elfPosition]
-    //     : caloriesArr[elfPosition] > highestCalories[1]
-    //     ?
-    //       highestCalories[0],
-    // )
-    highestCalories[0] =
-      caloriesArr[elfPosition] > highestCalories[0]
-        ? caloriesArr[elfPosition]
-        : highestCalories[0]
-    highestCalories[1] =
-      caloriesArr[elfPosition] > highestCalories[1]
-        ? caloriesArr[elfPosition]
-        : highestCalories[0]
-    highestCalories[2] =
-      caloriesArr[elfPosition] > highestCalories[2]
-        ? caloriesArr[elfPosition]
-        : highestCalories[0]
+    const totalCaloriesCrrElf = totalCaloriesByElf[elfPosition]
+    if (totalCaloriesCrrElf > highestCalories[0]) {
+      highestCalories.unshift(totalCaloriesCrrElf)
+    } else if (totalCaloriesCrrElf > highestCalories[1]) {
+      highestCalories[1] = totalCaloriesCrrElf
+    } else if (totalCaloriesCrrElf > highestCalories[2]) {
+      highestCalories[2] = totalCaloriesCrrElf
+    }
 
     elfPosition++
 
     return "0"
   }, "0")
 
-  console.log(highestCalories)
-  return highestCalories.slice(0, 3).reduce((prev, crr) => prev + crr)
+  return highestCalories.slice(0, 3).reduce((prev, crr) => prev + crr, 0)
 }
 
 run({
